@@ -1,3 +1,5 @@
+import json
+
 class Variables:
     name=None
     variable_type=None
@@ -16,7 +18,8 @@ class Variables:
     def getVariableValue(self):
         return self.variable_value
     def getJson(self):
-        jsonDefinition=str(self.name)+"{ value:"+str(self.variable_value)+", type:"+str(self.variable_type)+"}"
+        #jsonDefinition=str(self.name)+"{\n\t value:"+str(self.variable_value)+",\n\t type:"+str(self.variable_type)+"}\n"
+        jsonDefinition=json.dumps(self.__dict__)
         return jsonDefinition
 
 class Bodies:
@@ -31,15 +34,17 @@ class Bodies:
     
     def getBody(self):
         return self.body
+    
     def getJson(self):
         jsonDefinition=""
-        jsonDefinition+=" variables{"
+        jsonDefinition+=" variables{\n\t"
         if(len(self.variables)>0):
             for i in range(len(self.variables)-1):
-                jsonDefinition+=self.variables[i].getJson()+","
-            jsonDefinition+=self.variables[len(self.variables)-1].getJson()+"}"
+                jsonDefinition+=self.variables[i].getJson()+",\n\t"
+            jsonDefinition+=self.variables[len(self.variables)-1].getJson()+"}\n"
         else:
-            jsonDefinition+="}"
+            jsonDefinition+="}\n"
+        
         return jsonDefinition
     
 class Functions:
@@ -67,13 +72,14 @@ class Functions:
     
     def getJson(self):
         jsonDefinition=""
-        jsonDefinition+=self.name+"{ parameters:"+self.parameters+","+" return_parameters:"+self.return_parameters+","+" body{"+self.body.getJson()+"}}"
+        jsonDefinition+="name:"+self.name+",\n\t parameters:"+self.parameters+",\n\t"+" return_parameters:"+self.return_parameters+",\n\t"+"\n body{"+self.body.getJson()+"}\n"
         return jsonDefinition
 
 class Classes:
-    functions=None
+    functions=[]
     body=None
-    def __init__(self,functions,body):
+    name=None
+    def __init__(self,name,functions,body):
         self.functions=functions
         self.body=body
         
@@ -83,28 +89,59 @@ class Classes:
     def getBody(self):
         return self.body
     
-class Modules:
-    classes=None
-    functions=None
+    def getJson(self):
+        jsonDefinition=""
+        if(self.name!=None):
+            jsonDefinition+=self.name+"{\n\t"
+        else:
+            jsonDefinition+="main{\n\t"
+        
+        jsonDefinition+="functions{\n\t"
+        if(len(self.functions)>0):
+            for i in range(len(self.functions)-1):
+                jsonDefinition+=self.functions[i].getJson()+",\n\t"
+            jsonDefinition+=str(self.functions[len(self.functions)-1])+"}\n\t"
+        else:
+            jsonDefinition+="},\n\t"
+        jsonDefinition+="body{\n\t"+self.body.getJson()+"}\n\t"
+        
+        return jsonDefinition
+    
+class Modules:#the bodies of the modules are class type data
+    classes=[]
     body=None
-    def __init__(self,classes,functions,body):
+    name=None
+    
+    def __init__(self,name,classes,body):
         self.classes=classes
-        self.functions=functions
         self.body=body
+        self.name=name
         
     def getClasses(self):
         return self.classes
     
-    def getFunctions(self):
-        return self.functions
-    
     def getBody(self):
         return self.body
     
+    def getName(self):
+        return self.name
+    
+    def getJson(self):
+        jsonDefinition=""
+        for clas in self.classes:
+            jsonDefinition+=clas.getJson()+","
+        jsonDefinition+=self.body.getJson()
+        return jsonDefinition
+    
 class Projects:
-    modules=None
-    def __init__(self,modules):
+    modules=[]
+    name=""
+    def __init__(self,name,modules):
         self.modules=modules
+        self.name=name
         
     def getModules(self):
         return self.modules
+    
+    def getName(self):
+        return self.name

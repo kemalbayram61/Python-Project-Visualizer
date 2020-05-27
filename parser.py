@@ -130,7 +130,7 @@ class ParseFunctions:
         for i in range(len(self.functions)):
             if(self.functions[i]==" "):
                 counter=1
-                while(self.functions[i+counter]!="("):#def getName(self):
+                while(self.functions[i+counter]!="("):#equal def getName(self):
                     temp+=self.functions[i+counter]
                     counter=counter+1
                 self.name=temp
@@ -168,41 +168,170 @@ class ParseFunctions:
         function=description.Functions(self.name,self.parameters,self.return_parameters,self.body)
         return function
 
-dize="""def setParameters(self):
-        temp=""
-        for i in range(len(self.functions)):
-            if(self.functions[i]==" "):
-                counter=1
-                while(self.functions[i+counter]!="("):#def getName(self):
-                    temp+=self.functions[i+counter]
-                    counter=counter+1
-                self.name=temp
-                temp=""
-                if(self.functions[i+counter+1]!=")"):#not equal def getName():
-                    counter=counter+1
-                    while(self.functions[i+counter]!=")"):
-                        temp=temp+self.functions[i+counter]
-                        counter=counter+1
-                    self.bodyStartIndex=i+counter+1
-                else:
-                    self.bodyStartIndex=i+counter+2
-                self.parameters=temp
-                break"""
+class ParseClasses:
+    name=None
+    functions=[]
+    body=None
+    classString=""
+    def __init__(self,classString):
+        self.classString=classString
+        
+    def indent(self,string):
+        indent=0
 
-a=ParseFunctions(dize)
-print(a.getFunction().getJson())
+        while(indent<len(string) and not(string[indent].isalpha())):
+            indent=indent+1
+
+        return indent
+                
+    def setParameters(self):
+        lines=self.classString.splitlines()
+        indent=-1
+        temp=""
+        body_temp=""
+        counter=0
+        temp_functions=[]
+        i=0
         
+        while(i<len(lines)):
+            split_lines=lines[i].split(" ")
+            if("class" in split_lines):
+                self.name=split_lines[-1][0:len(split_lines[-1])-1]
+                i=i+1
+                
+            elif("def" in split_lines):
+                temp=lines[i]
+                counter=i+1
+                indent=self.indent(lines[i])
+                new_indent=self.indent(lines[counter])
+                while(new_indent>indent and (counter+1)<len(lines)):
+                    temp=temp+lines[counter]+"\n"
+                    counter=counter+1
+                    new_indent=self.indent(lines[counter])
+                temp_functions.append(temp.strip())
+                i=counter
+            
+            else:
+                body_temp=body_temp+lines[i]
+                i=i+1
+        #set body with body string      
+        b=ParseBodies(body_temp).getBody()  
+        self.body=b
+            
+        #set functions on temp_functtions array
+        for function in temp_functions:
+            f=ParseFunctions(function).getFunction()
+            self.functions.append(f)
         
+    def getClass(self):
+        self.setParameters()
+        classes=description.Classes(self.name,self.functions,self.body)
+        return classes
         
+                    
         
+
+class ParseModules:
+    classes=[]
+    body=None
+    functions=[]
+    modul_string=""
+    name=""
+    
+    def __init__(self,name,modul_string):
+        self.modul_string=modul_string
+        self.name=name
+
+    def indent(self,string):
+        indent=0
+
+        while(indent<len(string) and not(string[indent].isalpha())):
+            indent=indent+1
+
+        return indent
+    
+    def setParameters(self):
+        if(("class" not in self.modul_string) and ("def" not in self.modul_string)):
+            self.body=ParseBodies(self.modul_string)
         
+        elif("class" not in self.modul_string):
+            self.classes=ParseClasses(self.modul_string)
+            
+        else:
+            lines=self.modul_string.splitlines()
+            i=0
+            counter=0
+            indent=0
+            new_indent=0
+            temp_class=""
+            temp_classes=[]
+            temp_body=""
+            
+            while(i<len(lines)):
+                line_split=lines[i].split(" ")
+                if("class" in line_split):
+                    temp_class=""
+                    indent=self.indent(lines[i])
+                    counter=i
+                    new_indent=self.indent(lines[counter+1])
+                    while(new_indent>indent and (counter+1)<len(lines)):
+                        temp_class+=lines[counter]+" "
+                        counter=counter+1
+                        new_indent=self.indent(lines[counter])
+                    i=counter
+                    temp_classes.append(temp_class.strip())
+                else:
+                    temp_body+=lines[i]+"\n"
+                    i=i+1
+                    
+            body_class=ParseClasses(temp_body).getClass()
+            self.body=body_class#the bodies of the modules are class type data
+            
+            for clsa in temp_classes:
+                c=ParseClasses(clsa).getClass()
+                self.classes.append(c)
+            print(self.body.getJson())
+                
+    def getModule(self):
+        self.setParameters()
+        module=description.Modules(self.name,self.classes,self.body)
+        return module
+
+
+
+class ParseProject:
+    modules=[]
+    project_name=""
+    
+    def __init__(self,project_name):
+        self.project_name=project_name
         
+    def addModul(self,name,modul_string):
+        modul=ParseModules(name,modul_string)        
+        self.modules.append(modul)
+        return True
         
+    def deleteModul(self,name):
+        modules=[]
         
-        
-        
-        
-        
+        for modul in self.modules:
+            if(modules.getName()!=name):
+                modules.append(modul)
+        self.modules=modules
+        return True
+    
+    def updateModul(self,name,modul_string):
+        for i in range(len(self.modules)):
+            if(self.modules[i].getName()==name):
+                modul=ParseModules(name,modul_string)
+                self.modules[i]=modul
+                return True
+        return False
+            
+    def getProjec(self):
+        project=description.Projects(self.project_name,self.modules)
+        return project
+     
         
         
         
