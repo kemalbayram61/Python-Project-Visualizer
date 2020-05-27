@@ -1,4 +1,4 @@
-import description
+import description_objects
 """
 summary
 The classes that will convert the input received as a string for all the 
@@ -54,7 +54,7 @@ class ParseVariable:
 
     def getVariables(self):
         self.parse()
-        variables=description.Variables(self.variable_name,self.variable_type,self.variable_value)
+        variables=description_objects.Variables(self.variable_name,self.variable_type,self.variable_value)
         return variables
     
 class ParseBodies:
@@ -118,7 +118,7 @@ class ParseBodies:
                 
     def getBody(self):
         self.parse()
-        bodies=description.Bodies(self.variables,self.body)
+        bodies=description_objects.Bodies(self.variables,self.body)
         return bodies
     
 
@@ -173,7 +173,7 @@ class ParseFunctions:
         
     def getFunction(self):
         self.parse()
-        function=description.Functions(self.name,self.parameters,self.return_parameters,self.body)
+        function=description_objects.Functions(self.name,self.parameters,self.return_parameters,self.body)
         return function
 
 class ParseClasses:
@@ -233,7 +233,7 @@ class ParseClasses:
         
     def getClass(self):
         self.setParameters()
-        classes=description.Classes(self.name,self.functions,self.body)
+        classes=description_objects.Classes(self.name,self.functions,self.body)
         return classes
         
                     
@@ -302,7 +302,7 @@ class ParseModules:
                 
     def getModule(self):
         self.setParameters()
-        module=description.Modules(self.name,self.classes,self.body)
+        module=description_objects.Modules(self.name,self.classes,self.body)
         return module
 
 
@@ -337,7 +337,7 @@ class ParseProject:
         return False
             
     def getProjec(self):
-        project=description.Projects(self.project_name,self.modules)
+        project=description_objects.Projects(self.project_name,self.modules)
         return project
      
         

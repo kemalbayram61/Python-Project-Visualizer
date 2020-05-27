@@ -1,5 +1,5 @@
-import description 
-from parser import ParseBodies
+import description_objects
+import parse_objects
 """
 summary
 - relationships are standardized as follows
@@ -19,7 +19,7 @@ class CreateNetwork:
         self.objects=objects
         
     def determiningNodes(self):
-        if(type(self.objects)==description.Bodies):
+        if(type(self.objects)==description_objects.Bodies):
             print("Input Body")
             
             
@@ -47,7 +47,7 @@ dize="""
 """
 
 
-obj=ParseBodies(dize)
+obj=parse_objects.ParseBodies(dize)
 obj=obj.getBody()
 
-a=CreateNetwork(obj)
+a=CreateNetwork(obj).determiningNodes()
