@@ -1,4 +1,12 @@
 import description
+"""
+summary
+The classes that will convert the input received as a string for all the 
+objects in the definition module into that object are included in this module.
+
+created: 24.05.2020 by kemalbayramag@gmail.com
+
+"""
 
 class ParseVariable:
     variable=None
@@ -53,8 +61,8 @@ class ParseBodies:
     body=None
     variables=[]
     
-    def __init__(self,body):
-        self.body=body
+    def __init__(self,body_string):
+        self.body=body_string
         
     def isCase(self,location):#a==1 or a!=2
         caseCharacters=["=","!",">","<"]

@@ -1,4 +1,11 @@
 import json
+"""
+summary
+is the module that contains all the objects that can be found in a project 
+and these objects are converted to json format
+
+created: 23.05.2020 by kemalbayramag@gmail.com
+"""
 
 class Variables:
     name=None
