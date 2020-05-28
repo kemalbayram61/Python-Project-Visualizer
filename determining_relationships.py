@@ -1,5 +1,6 @@
 import description_objects
 import parse_objects
+import description_objects
 """
 summary
 - relationships are standardized as follows
@@ -10,19 +11,21 @@ node = {id:"id","Name: "name" type "type", "value" value "}
 
 created: 27.05.2020 by kemalbayramag@gmail.com
 """
+
 class CreateNetwork:
     nodes=[]
     relationships=[]
     objects=[]
     
-    def __init__(self,objects):
-        self.objects=objects
+    def __init__(self,project):
+        self.project=project
         
     def determiningNodes(self):
-        if(type(self.objects)==description_objects.Bodies):
-            print("Input Body")
+        package_name=self.project.getName()
+
+
             
-            
+
 dize="""
     name=None
     variable_type=None
@@ -46,8 +49,9 @@ dize="""
         return jsonDefinition
 """
 
+project=parse_objects.ParseProject("proje1")
+project.addModul("modul1",dize)
+prj_obj=project.getProjec()
 
-obj=parse_objects.ParseBodies(dize)
-obj=obj.getBody()
-
-a=CreateNetwork(obj).determiningNodes()
+network=CreateNetwork(prj_obj)
+network.determiningNodes()
