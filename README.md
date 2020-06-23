@@ -1,4 +1,4 @@
-# -Project-Visualizer
+# Project-Visualizer
 Project visualizer for python 3.x
 
 Project Visualizer
