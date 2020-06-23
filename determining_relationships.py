@@ -14,44 +14,56 @@ created: 27.05.2020 by kemalbayramag@gmail.com
 
 class CreateNetwork:
     nodes=[]
-    relationships=[]
+    edges=[]
     objects=[]
+    project_name=""
     
     def __init__(self,project):
         self.project=project
         
     def determiningNodes(self):
-        package_name=self.project.getName()
+        self.project_name=self.project.getName()
+        modules=self.project.getModules()
+        print(modules[0].getModule().getJson())
+        moduleNames=[]
+        classesNames=[]
 
 
             
 
 dize="""
     name=None
-    variable_type=None
-    variable_value=None
-    def __init__(self,name,variable_type,variable_value):
-        self.name=name
-        self.variable_value=variable_value
-        self.variable_type=variable_type
+    functions=[]
+    body=None
+    classString=""
+    def __init__(self,classString):
+        self.classString=classString
+        self.setParameters()
         
-    def getName(self):
-        return self.name
-    
-    def getVariableType(self):
-        return self.variable_type
-    
-    def getVariableValue(self):
-        return self.variable_value
-    def getJson(self):
-        #jsonDefinition=str(self.name)+"{\n\t value:"+str(self.variable_value)+",\n\t type:"+str(self.variable_type)+"}\n"
-        jsonDefinition=json.dumps(self.__dict__)
-        return jsonDefinition
+    def __init__(self,classString):
+        self.classString=classString
+        self.setParameters()
+class ParseClasses:
+    name=None
+    functions=[]
+    body=None
+    classString=""
+    def __init__(self,classString):
+        self.classString=classString
+        self.setParameters()
+        
+class ParseClasses:
+    name=None
+    functions=[]
+    body=None
+    classString=""
+    def __init__(self,classString):
+        self.classString=classString
+        self.setParameters()
 """
 
-project=parse_objects.ParseProject("proje1")
-project.addModul("modul1",dize)
-prj_obj=project.getProjec()
+a = parse_objects.ParseModules("firstExam",dize).getModule()
+b = a.getBody().getFunctions()[0]
+print(b.getName())
 
-network=CreateNetwork(prj_obj)
-network.determiningNodes()
+

@@ -24,6 +24,7 @@ class Variables:
     
     def getVariableValue(self):
         return self.variable_value
+
     def getJson(self):
         #jsonDefinition=str(self.name)+"{\n\t value:"+str(self.variable_value)+",\n\t type:"+str(self.variable_type)+"}\n"
         jsonDefinition=json.dumps(self.__dict__)
@@ -87,6 +88,7 @@ class Classes:
     body=None
     name=None
     def __init__(self,name,functions,body):
+        self.name = name
         self.functions=functions
         self.body=body
         
@@ -127,7 +129,7 @@ class Modules:#the bodies of the modules are class type data
     def getClasses(self):
         return self.classes
     
-    def getBody(self):
+    def getBody(self):#class type body
         return self.body
     
     def getName(self):
@@ -138,9 +140,10 @@ class Modules:#the bodies of the modules are class type data
         for clas in self.classes:
             jsonDefinition+=clas.getJson()+","
         jsonDefinition+=self.body.getJson()
+
         return jsonDefinition
     
-class Projects:
+class Project:
     modules=[]
     name=""
     def __init__(self,name,modules):

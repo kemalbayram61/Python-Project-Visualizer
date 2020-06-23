@@ -9,13 +9,14 @@ created: 24.05.2020 by kemalbayramag@gmail.com
 """
 
 class ParseVariable:
-    variable=None
+    variable_string=None
     variable_name=None
     variable_value=None
     variable_type=None
     
-    def __init__(self,variable):
-        self.variable=variable
+    def __init__(self,variable_string):
+        self.variable_string=variable_string
+        self.parse()
         
     def getType(self,character):
         numbers=["1","2","3","4","5","6","7","8","9","0","-","+"]
@@ -32,19 +33,19 @@ class ParseVariable:
         value=""
         case=False
         
-        for i in range(len(self.variable)):# a = 5 
-            if(self.variable[i]=="="):
+        for i in range(len(self.variable_string)):# a = 5
+            if(self.variable_string[i]=="="):
                 case=True
                 continue
             
             if(case==False):
-                name=name+self.variable[i]
+                name=name+self.variable_string[i]
                 
             else:
-                value=value+self.variable[i]
+                value=value+self.variable_string[i]
 
         name=name.strip() #deletes spaces if entry with spaces      
-        value=value.strip()
+        value=value.strip() #deletes spaces if entry with spaces
                 
         self.variable_name=name
 
@@ -53,128 +54,72 @@ class ParseVariable:
         self.variable_type=self.getType(value)
 
     def getVariables(self):
-        self.parse()
-        variables=description_objects.Variables(self.variable_name,self.variable_type,self.variable_value)
-        return variables
-    
+        return description_objects.Variables(self.variable_name,self.variable_type,self.variable_value)
+
 class ParseBodies:
-    body=None
-    variables=[]
-    
-    def __init__(self,body_string):
-        self.body=body_string
-        
-    def isCase(self,location):#a==1 or a!=2
-        caseCharacters=["=","!",">","<"]
-        if(self.body[location-1] in caseCharacters or self.body[location+1] in caseCharacters):
-            return True
-        elif(self.body[location-1]=="\""):
-            return True
-        else:
-            return False
-    
-    def isIncorDec(self,location):#a+=5 or a-=5 increment or decrement
-        characters=["+","-","*","/","%"]
-        if(self.body[location-1] in characters):
-            return True
-        else:
-            return False
-        
-    def badCharacters(self,character):
-        characters=["=",","," ",")","(","{","}","\n"]
-        if(character in characters):
-            return True
-        else:
-            return False
-    
-    def parse(self):
-        
-        for i in range(len(self.body)):
-            
-            if(self.body[i]=="=" and  not(self.isCase(i)) and not(self.isIncorDec(i))):
-                counter=1
-                temp=""
-                temp+=self.body[i]
-                while((i-counter)>=0  and not(self.badCharacters(self.body[i-counter]))):#spool backwards
-                    temp=self.body[i-counter]+temp
-                    counter=counter+1
-                    
-                counter=1
-                while((i+counter)<len(self.body) and not(self.badCharacters(self.body[i+counter]))):#forward spooling
-                    temp=temp+self.body[i+counter]
-                    counter=counter+1
-                    
-                variable=ParseVariable(temp).getVariables()
-                if(len(self.variables)!=0):
-                    case=False
-                    for var in self.variables:
-                        if(var.getName()==variable.getName()):
-                            case=True
-                    if(not(case)):
-                        self.variables.append(variable)
-                else:
-                    self.variables.append(variable)
-                
-                
-    def getBody(self):
+    body_string = ""
+    variables = []
+    body = ""
+
+    def  __init__(self,body_string):
+        self.body_string = body_string
         self.parse()
-        bodies=description_objects.Bodies(self.variables,self.body)
-        return bodies
-    
+
+    def isBadLine(self,line):
+        keywords = ["def ","class ","for ","switch ","as ", "assert ",
+                    "break ", "continue ", "del ", " elif", "else:",
+                    "except ", "finally ", "from ", "global ",
+                    "if(", "import ", " in ", " is ", "lambda ", " not",
+                    " or ", "pass ", "return ", "try:", "except ",
+                    "while(", " with ", " yield "]
+        for word in keywords:
+            if(word in line):
+                return True
+        return False
+
+    def parse(self):
+        body_lines = self.body_string.splitlines()
+        for line in body_lines:
+            if( not(self.isBadLine(line)) and ("=" in line) and line.strip()[0]!="#"):
+                self.variables.append(ParseVariable(line).getVariables())
+            else:
+                self.body = self.body + line +"\n"
+
+    def getBody(self):
+        return description_objects.Bodies(self.variables,self.body)
+
 
 class ParseFunctions:
-    name=None
-    return_parameters=None
-    parameters=None
-    body=None
-    functions=""
-    bodyStartIndex=0
-    
-    def __init__(self,functions):
-        self.functions=functions
-        
-    def setParameters(self):
-        temp=""
-        for i in range(len(self.functions)):
-            if(self.functions[i]==" "):
-                counter=1
-                while(self.functions[i+counter]!="("):#equal def getName(self):
-                    temp+=self.functions[i+counter]
-                    counter=counter+1
-                self.name=temp
-                temp=""
-                if(self.functions[i+counter+1]!=")"):#not equal def getName():
-                    counter=counter+1
-                    while(self.functions[i+counter]!=")"):
-                        temp=temp+self.functions[i+counter]
-                        counter=counter+1
-                    self.bodyStartIndex=i+counter+1
-                else:
-                    self.bodyStartIndex=i+counter+2
-                self.parameters=temp
-                break
-            
-    def setReturns(self):
-        if("return" in self.functions):
-            temp_array=self.functions.split(" ")
-            for i in range(len(temp_array)):
-                if(temp_array[i]=="return"):
-                    self.return_parameters=temp_array[i+1]
-                    break
-                    
-        else:
-            self.return_parameters="void_function"
-    
-    def parse(self):
-        self.setParameters()
-        self.setReturns()
-        bodyString=self.functions[self.bodyStartIndex:len(self.functions)]
-        self.body=ParseBodies(bodyString).getBody()
-        
-    def getFunction(self):
+    function_string = ""
+    name = ""
+    return_parameter = ""
+    parameters = ""
+    body = ""
+
+    def __init__(self,function_string):
+        self.function_string=function_string
         self.parse()
-        function=description_objects.Functions(self.name,self.parameters,self.return_parameters,self.body)
-        return function
+
+    def parse(self):
+        split_lines = self.function_string.splitlines()
+        for line in split_lines:
+            if("def"+" " in line):
+                temp = line.split()[1].strip()  #def getJson(self): --->  getJson(self):
+                temp = temp.split("(")          #getJson(self): ----> getJson , self):
+                self.name = temp[0]             #getJson(self): ----> getJson
+                self.parameters = temp[1][:-2]  #self): ----> self
+
+            elif("return " in line):
+                temp = line.split()[1].strip()  #return jsonDefinition  ----> jsonDefinition
+                self.return_parameter = temp
+
+            else:
+                self.body = self.body + line +"\n"
+
+        self.body = ParseBodies(self.body).getBody()
+
+    def getFunction(self):
+        return  description_objects.Functions(self.name,self.parameters,self.return_parameter,self.body)
 
 class ParseClasses:
     name=None
@@ -183,13 +128,13 @@ class ParseClasses:
     classString=""
     def __init__(self,classString):
         self.classString=classString
+        self.setParameters()
         
     def indent(self,string):
         indent=0
 
         while(indent<len(string) and not(string[indent].isalpha())):
             indent=indent+1
-
         return indent
                 
     def setParameters(self):
@@ -200,14 +145,13 @@ class ParseClasses:
         counter=0
         temp_functions=[]
         i=0
-        
+
         while(i<len(lines)):
-            split_lines=lines[i].split(" ")
-            if("class" in split_lines):
-                self.name=split_lines[-1][0:len(split_lines[-1])-1]
+            if("class"+" " in lines[i]): #class ParseClasses: ---> ParseClasses
+                self.name = lines[i].split()[-1][:-1]
                 i=i+1
                 
-            elif("def" in split_lines):
+            elif("def"+" " in lines[i]):
                 temp=lines[i]
                 counter=i+1
                 indent=self.indent(lines[i])
@@ -220,24 +164,22 @@ class ParseClasses:
                 i=counter
             
             else:
-                body_temp=body_temp+lines[i]
+                body_temp=body_temp+lines[i] +"\n"
                 i=i+1
+
         #set body with body string      
-        b=ParseBodies(body_temp).getBody()  
+        b=ParseBodies(body_temp).getBody()
         self.body=b
             
         #set functions on temp_functtions array
         for function in temp_functions:
             f=ParseFunctions(function).getFunction()
+            f.getName()
             self.functions.append(f)
         
     def getClass(self):
-        self.setParameters()
-        classes=description_objects.Classes(self.name,self.functions,self.body)
-        return classes
-        
-                    
-        
+        return description_objects.Classes(self.name,self.functions,self.body)
+
 
 class ParseModules:
     classes=[]
@@ -249,6 +191,8 @@ class ParseModules:
     def __init__(self,name,modul_string):
         self.modul_string=modul_string
         self.name=name
+        self.clearWhiteLines()
+        self.setParameters()
 
     def indent(self,string):
         indent=0
@@ -257,6 +201,22 @@ class ParseModules:
             indent=indent+1
 
         return indent
+
+    def isWhiteLine(self,line):
+        for i in line:
+            if(i!=" "):
+                return False
+        return True
+
+    def clearWhiteLines(self):
+        lines = self.modul_string.splitlines()
+        temp_modul_string = ""
+
+        for line in lines:
+            if(self.isWhiteLine(line)==False):
+                temp_modul_string =temp_modul_string + line +"\n"
+
+        self.modul_string = temp_modul_string
     
     def setParameters(self):
         if(("class" not in self.modul_string) and ("def" not in self.modul_string)):
@@ -298,13 +258,9 @@ class ParseModules:
             for clsa in temp_classes:
                 c=ParseClasses(clsa).getClass()
                 self.classes.append(c)
-            print(self.body.getJson())
                 
     def getModule(self):
-        self.setParameters()
-        module=description_objects.Modules(self.name,self.classes,self.body)
-        return module
-
+        return description_objects.Modules(self.name,self.classes,self.body)
 
 
 class ParseProject:
@@ -336,8 +292,8 @@ class ParseProject:
                 return True
         return False
             
-    def getProjec(self):
-        project=description_objects.Projects(self.project_name,self.modules)
+    def getProject(self):
+        project=description_objects.Project(self.project_name,self.modules)
         return project
      
         
