@@ -87,10 +87,13 @@ class Classes:
     functions=[]
     body=None
     name=None
-    def __init__(self,name,functions,body):
+    importedModules = []
+
+    def __init__(self,name,functions,body,importedModules):
         self.name = name
         self.functions=functions
         self.body=body
+        self.importedModules = importedModules
         
     def getFunctions(self):
         return self.functions
@@ -115,16 +118,24 @@ class Classes:
         jsonDefinition+="body{\n\t"+self.body.getJson()+"}\n\t"
         
         return jsonDefinition
+
+    def getImportedModules(self):
+        return self.importedModules
+
+    def getName(self):
+        return self.name
     
 class Modules:#the bodies of the modules are class type data
     classes=[]
     body=None
     name=None
+    impoted_modules=[]
     
-    def __init__(self,name,classes,body):
+    def __init__(self,name,classes,body,imported_Modules):
         self.classes=classes
         self.body=body
         self.name=name
+        self.impoted_modules = imported_Modules
         
     def getClasses(self):
         return self.classes
@@ -142,6 +153,9 @@ class Modules:#the bodies of the modules are class type data
         jsonDefinition+=self.body.getJson()
 
         return jsonDefinition
+
+    def getImportedModules(self):
+        return self.impoted_modules
     
 class Project:
     modules=[]

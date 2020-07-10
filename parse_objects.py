@@ -126,8 +126,12 @@ class ParseClasses:
     functions=[]
     body=None
     classString=""
-    def __init__(self,classString):
+    importedModules = []
+    modulReferences = []
+
+    def __init__(self,classString,moduleReferences):
         self.classString=classString
+        self.modulReferences = moduleReferences
         self.setParameters()
         
     def indent(self,string):
@@ -176,9 +180,28 @@ class ParseClasses:
             f=ParseFunctions(function).getFunction()
             f.getName()
             self.functions.append(f)
-        
+
+    def setImportedModules(self):
+        referenceName = ""
+        for reference in self.modulReferences:
+            referenceElements = reference.split("-")
+            if(referenceElements[0] == "standart" and len(referenceElements) == 2):#standart-modulname
+                referenceName = referenceElements[1]
+            elif(referenceElements[0] == "standart" and len(referenceElements) == 3):#standart-modulname-mdlname
+                referenceName = referenceElements[2]
+            elif(referenceElements[0] == "advenced" and len(referenceElements) == 3):#advenced-modulname-classname
+                referenceName = referenceElements[2]
+            elif(referenceElements[0] == "advenced" and len(referenceElements) == 4):#advenced-modulname-classname-clsname
+                referenceName = referenceElements[3]
+            classLines = self.classString.splitlines()
+            for line in classLines:
+                if(referenceName in line):
+                    self.importedModules.append(reference)#import modulname as alias
+                    break
+
+
     def getClass(self):
-        return description_objects.Classes(self.name,self.functions,self.body)
+        return description_objects.Classes(self.name,self.functions,self.body,self.importedModules)
 
 
 class ParseModules:
@@ -187,12 +210,34 @@ class ParseModules:
     functions=[]
     modul_string=""
     name=""
+    imported_modules = []
     
     def __init__(self,name,modul_string):
         self.modul_string=modul_string
         self.name=name
+        self.setImportedModules()
         self.clearWhiteLines()
         self.setParameters()
+
+    def setImportedModules(self):
+        lines = self.modul_string.splitlines()
+        for line in lines:
+            if("from " in line):#from modulname import classname
+                index = line.strip().split().index("from ")
+                temp = "advenced-"
+                temp = temp + line.split()[index + 1]#module name
+                temp = temp + "-" + line.split()[index + 3]
+                if("as" in line):#from modulname import classname as clsname
+                    temp = temp + "-" + line.split()[index + 5]
+                self.imported_modules.append(temp)
+
+            elif("import " in line):#import modulname
+                index = line.strip().split().index("import ")
+                temp = "standart-"
+                temp = temp + line.split()[index+1]
+                if("as" in line):#import modulname as mdl
+                    temp = temp + "-" + line.split()[index+3]
+                self.imported_modules.append(temp)
 
     def indent(self,string):
         indent=0
@@ -219,6 +264,7 @@ class ParseModules:
         self.modul_string = temp_modul_string
     
     def setParameters(self):
+
         if(("class" not in self.modul_string) and ("def" not in self.modul_string)):
             self.body=ParseBodies(self.modul_string)
         
@@ -244,23 +290,25 @@ class ParseModules:
                     new_indent=self.indent(lines[counter+1])
                     while(new_indent>indent and (counter+1)<len(lines)):
                         temp_class+=lines[counter]+" "
+                        print(lines[counter]+"\n")
                         counter=counter+1
                         new_indent=self.indent(lines[counter])
                     i=counter
                     temp_classes.append(temp_class.strip())
+
                 else:
                     temp_body+=lines[i]+"\n"
                     i=i+1
                     
-            body_class=ParseClasses(temp_body).getClass()
+            body_class=ParseClasses(temp_body,self.imported_modules).getClass()
             self.body=body_class#the bodies of the modules are class type data
             
             for clsa in temp_classes:
-                c=ParseClasses(clsa).getClass()
+                c=ParseClasses(clsa,self.imported_modules).getClass()
                 self.classes.append(c)
                 
     def getModule(self):
-        return description_objects.Modules(self.name,self.classes,self.body)
+        return description_objects.Modules(self.name,self.classes,self.body,self.imported_modules)
 
 
 class ParseProject:
@@ -295,12 +343,3 @@ class ParseProject:
     def getProject(self):
         project=description_objects.Project(self.project_name,self.modules)
         return project
-     
-        
-        
-        
-        
-        
-        
-        
-        
