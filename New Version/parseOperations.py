@@ -1,3 +1,4 @@
+import  objectDefinition
 class ParseModules:
     #definition
     _name = ""
@@ -10,6 +11,9 @@ class ParseModules:
     def __init__(self,name,module_string):
         self._module_lines =module_string.splitlines()
         self._name =name
+        self._classes = []
+        self._functions_names = []
+        self._imported_objects_names = []
 
         #run start functions
         self.__removeLineSpacing()
@@ -25,6 +29,9 @@ class ParseModules:
 
     def getFunctions(self):
         return self._functions_names
+
+    def getModuleObject(self):
+        return objectDefinition.Modules(self._name,self._classes,self._functions_names,self._imported_objects_names)
 
     def __isSpaceLine(self,line):
         for alpha in line:
@@ -72,7 +79,7 @@ class ParseModules:
     def __setClasses(self):
         obj = {'name':'class_name','functions':['f1_name','f2_name']}
         module_body = []
-        i=0
+        i = 0 
         while(i<len(self._module_lines)):
             if("class"+" " in self._module_lines[i]):
                 class_body = []
@@ -91,7 +98,7 @@ class ParseModules:
 
             if(i<len(self._module_lines)):
                 module_body.append(self._module_lines[i])
-            i=i+1
+            i = i+1
         self._functions_names = self.__getFunctions(module_body)
 
     def __getFunctions(self,lines):

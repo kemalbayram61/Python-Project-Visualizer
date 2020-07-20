@@ -33,6 +33,9 @@ class Classes:
     #functions
     # Constructive function of Classes class
     def __init__(self,name,functions_names):
+        self._function_names = []
+        self._function_objects = []
+        
         self._name =name
         self._function_names = functions_names
 
@@ -64,6 +67,13 @@ class Modules:
     #functions
     #Constructive function of Modules class
     def __init__(self,name,classes,functions_names,imported_objects_names):
+        self._classes = []
+        self._functions_names = []
+        self._imported_objects_names = []
+        self._classes_objects = []
+        self._functions_objects = []
+        self._imported_objects_objects = []
+
         self._name = name
         self._classes = classes
         self._functions_names = functions_names
@@ -76,8 +86,8 @@ class Modules:
 
     #setter functions
     def __setClasses(self):
-        for cls in self._classes:
-            self._classes_objects.append(Classes(cls['name'],cls['functions']))
+        for clss in self._classes:
+            self._classes_objects.append(Classes(clss['name'],clss['functions']))
 
     def __setFunctions(self):
         for func in self._functions_names:
@@ -140,15 +150,27 @@ class Project:
     def getModuleObject(self):
         return self._modules_object
 
+    def getName(self):
+        return self._name
+
 class Nodes:
     #definitions
     name = ""
-    type = ""
+    node_type = ""
+    node_color = ""
+    node_size = 0
+    node_icon =""
 
     # Constructive function of Nodes class
-    def __init__(self,name,type):
-        self.name = name
-        self.type = type
+    def __init__(self,name,count,node_type,node_color,node_size,node_icon):
+        self.name = str(count)+"-"+name
+        self.node_type = node_type
+        self.node_color = node_color
+        self.node_size = node_size
+        self.node_icon = node_icon
+    
+    def getString(self):
+        return self.name+"-"+self.node_type
 
 class Edges:
     #definitions
@@ -159,3 +181,6 @@ class Edges:
     def __init__(self,source_object,definition_object):
         self.source_object =source_object
         self.definition_object =definition_object
+
+    def getString(self):
+        return "Source: "+self.source_object+" --> Definition: "+self.definition_object
