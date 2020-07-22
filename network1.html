@@ -1,0 +1,105 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1600px;
+            height: 800px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": "#EA5900", "id": "0-proje1-project", "image": "icons\\project.png", "label": "0-proje1", "shape": "image", "size": 25}, {"color": "#79EA00", "id": "1-addModuleScreen-module", "image": "icons\\module.png", "label": "1-addModuleScreen", "shape": "image", "size": 20}, {"color": "#79EA00", "id": "2-namingScreen-module", "image": "icons\\module.png", "label": "2-namingScreen", "shape": "image", "size": 20}, {"color": "#79EA00", "id": "3-networkDefinition-module", "image": "icons\\module.png", "label": "3-networkDefinition", "shape": "image", "size": 20}, {"color": "#79EA00", "id": "4-objectDefinition-module", "image": "icons\\module.png", "label": "4-objectDefinition", "shape": "image", "size": 20}, {"color": "#79EA00", "id": "5-parseOperations-module", "image": "icons\\module.png", "label": "5-parseOperations", "shape": "image", "size": 20}, {"color": "#00EACE", "id": "6-AddModuleScreen-class", "image": "icons\\class.png", "label": "6-AddModuleScreen", "shape": "image", "size": 15}, {"color": "#004AEA", "id": "7-__init__-class-function", "image": "icons\\function.png", "label": "7-__init__", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "8-__browserFiles-class-function", "image": "icons\\function.png", "label": "8-__browserFiles", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "9-__createNetwork-class-function", "image": "icons\\function.png", "label": "9-__createNetwork", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "10-__showWindow-class-function", "image": "icons\\function.png", "label": "10-__showWindow", "shape": "image", "size": 10}, {"color": "#00EACE", "id": "11-NamingScreen-class", "image": "icons\\class.png", "label": "11-NamingScreen", "shape": "image", "size": 15}, {"color": "#004AEA", "id": "12-__init__-class-function", "image": "icons\\function.png", "label": "12-__init__", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "13-__clickNextButton-class-function", "image": "icons\\function.png", "label": "13-__clickNextButton", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "14-__showWindow-class-function", "image": "icons\\function.png", "label": "14-__showWindow", "shape": "image", "size": 10}, {"color": "#00EACE", "id": "15-ProjectNetwork-class", "image": "icons\\class.png", "label": "15-ProjectNetwork", "shape": "image", "size": 15}, {"color": "#004AEA", "id": "16-__init__-class-function", "image": "icons\\function.png", "label": "16-__init__", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "17-__writeNodes-class-function", "image": "icons\\function.png", "label": "17-__writeNodes", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "18-__setNetwork-class-function", "image": "icons\\function.png", "label": "18-__setNetwork", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "19-__setModulesRelationship-class-function", "image": "icons\\function.png", "label": "19-__setModulesRelationship", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "20-__createNetwork-class-function", "image": "icons\\function.png", "label": "20-__createNetwork", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "21-getNodes-class-function", "image": "icons\\function.png", "label": "21-getNodes", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "22-getEdges-class-function", "image": "icons\\function.png", "label": "22-getEdges", "shape": "image", "size": 10}, {"color": "#00EACE", "id": "23-ImportedObjects-class", "image": "icons\\class.png", "label": "23-ImportedObjects", "shape": "image", "size": 15}, {"color": "#00EACE", "id": "24-Classes-class", "image": "icons\\class.png", "label": "24-Classes", "shape": "image", "size": 15}, {"color": "#00EACE", "id": "25-Project-class", "image": "icons\\class.png", "label": "25-Project", "shape": "image", "size": 15}, {"color": "#00EACE", "id": "26-Edges-class", "image": "icons\\class.png", "label": "26-Edges", "shape": "image", "size": 15}, {"color": "#004AEA", "id": "27-__init__-class-function", "image": "icons\\function.png", "label": "27-__init__", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "28-__init__-class-function", "image": "icons\\function.png", "label": "28-__init__", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "29-__setFunctions-class-function", "image": "icons\\function.png", "label": "29-__setFunctions", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "30-getFunctionsObjects-class-function", "image": "icons\\function.png", "label": "30-getFunctionsObjects", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "31-getName-class-function", "image": "icons\\function.png", "label": "31-getName", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "32-__init__-class-function", "image": "icons\\function.png", "label": "32-__init__", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "33-addModule-class-function", "image": "icons\\function.png", "label": "33-addModule", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "34-getModule-class-function", "image": "icons\\function.png", "label": "34-getModule", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "35-updateModule-class-function", "image": "icons\\function.png", "label": "35-updateModule", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "36-deleteModule-class-function", "image": "icons\\function.png", "label": "36-deleteModule", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "37-getModuleObject-class-function", "image": "icons\\function.png", "label": "37-getModuleObject", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "38-getName-class-function", "image": "icons\\function.png", "label": "38-getName", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "39-__init__-class-function", "image": "icons\\function.png", "label": "39-__init__", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "40-getString-class-function", "image": "icons\\function.png", "label": "40-getString", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "41-__init__-module-function", "image": "icons\\module_function.png", "label": "41-__init__", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "42-getName-module-function", "image": "icons\\module_function.png", "label": "42-getName", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "43-__init__-module-function", "image": "icons\\module_function.png", "label": "43-__init__", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "44-__setClasses-module-function", "image": "icons\\module_function.png", "label": "44-__setClasses", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "45-__setFunctions-module-function", "image": "icons\\module_function.png", "label": "45-__setFunctions", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "46-__setImportedObjects-module-function", "image": "icons\\module_function.png", "label": "46-__setImportedObjects", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "47-getName-module-function", "image": "icons\\module_function.png", "label": "47-getName", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "48-getFunctionsObject-module-function", "image": "icons\\module_function.png", "label": "48-getFunctionsObject", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "49-getClassesObject-module-function", "image": "icons\\module_function.png", "label": "49-getClassesObject", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "50-getImportedObjects-module-function", "image": "icons\\module_function.png", "label": "50-getImportedObjects", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "51-__init__-module-function", "image": "icons\\module_function.png", "label": "51-__init__", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "52-getString-module-function", "image": "icons\\module_function.png", "label": "52-getString", "shape": "image", "size": 10}, {"color": "#00EACE", "id": "53-ParseModules-class", "image": "icons\\class.png", "label": "53-ParseModules", "shape": "image", "size": 15}, {"color": "#004AEA", "id": "54-__init__-class-function", "image": "icons\\function.png", "label": "54-__init__", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "55-getClasses-class-function", "image": "icons\\function.png", "label": "55-getClasses", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "56-getImportedObjects-class-function", "image": "icons\\function.png", "label": "56-getImportedObjects", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "57-getFunctions-class-function", "image": "icons\\function.png", "label": "57-getFunctions", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "58-getModuleObject-class-function", "image": "icons\\function.png", "label": "58-getModuleObject", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "59-__isSpaceLine-class-function", "image": "icons\\function.png", "label": "59-__isSpaceLine", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "60-__removeLineSpacing-class-function", "image": "icons\\function.png", "label": "60-__removeLineSpacing", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "61-__setImportedObjectName-class-function", "image": "icons\\function.png", "label": "61-__setImportedObjectName", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "62-__getIndent-class-function", "image": "icons\\function.png", "label": "62-__getIndent", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "63-__setClasses-class-function", "image": "icons\\function.png", "label": "63-__setClasses", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "64-__getFunctions-class-function", "image": "icons\\function.png", "label": "64-__getFunctions", "shape": "image", "size": 10}]);
+        edges = new vis.DataSet([{"from": "0-proje1-project", "to": "1-addModuleScreen-module"}, {"from": "0-proje1-project", "to": "2-namingScreen-module"}, {"from": "0-proje1-project", "to": "3-networkDefinition-module"}, {"from": "0-proje1-project", "to": "4-objectDefinition-module"}, {"from": "0-proje1-project", "to": "5-parseOperations-module"}, {"from": "1-addModuleScreen-module", "to": "6-AddModuleScreen-class"}, {"from": "6-AddModuleScreen-class", "to": "7-__init__-class-function"}, {"from": "6-AddModuleScreen-class", "to": "8-__browserFiles-class-function"}, {"from": "6-AddModuleScreen-class", "to": "9-__createNetwork-class-function"}, {"from": "6-AddModuleScreen-class", "to": "10-__showWindow-class-function"}, {"from": "2-namingScreen-module", "to": "11-NamingScreen-class"}, {"from": "11-NamingScreen-class", "to": "12-__init__-class-function"}, {"from": "11-NamingScreen-class", "to": "13-__clickNextButton-class-function"}, {"from": "11-NamingScreen-class", "to": "14-__showWindow-class-function"}, {"from": "3-networkDefinition-module", "to": "15-ProjectNetwork-class"}, {"from": "15-ProjectNetwork-class", "to": "16-__init__-class-function"}, {"from": "15-ProjectNetwork-class", "to": "17-__writeNodes-class-function"}, {"from": "15-ProjectNetwork-class", "to": "18-__setNetwork-class-function"}, {"from": "15-ProjectNetwork-class", "to": "19-__setModulesRelationship-class-function"}, {"from": "15-ProjectNetwork-class", "to": "20-__createNetwork-class-function"}, {"from": "15-ProjectNetwork-class", "to": "21-getNodes-class-function"}, {"from": "15-ProjectNetwork-class", "to": "22-getEdges-class-function"}, {"from": "4-objectDefinition-module", "to": "23-ImportedObjects-class"}, {"from": "4-objectDefinition-module", "to": "24-Classes-class"}, {"from": "4-objectDefinition-module", "to": "25-Project-class"}, {"from": "4-objectDefinition-module", "to": "26-Edges-class"}, {"from": "23-ImportedObjects-class", "to": "27-__init__-class-function"}, {"from": "24-Classes-class", "to": "28-__init__-class-function"}, {"from": "24-Classes-class", "to": "29-__setFunctions-class-function"}, {"from": "24-Classes-class", "to": "30-getFunctionsObjects-class-function"}, {"from": "24-Classes-class", "to": "31-getName-class-function"}, {"from": "25-Project-class", "to": "32-__init__-class-function"}, {"from": "25-Project-class", "to": "33-addModule-class-function"}, {"from": "25-Project-class", "to": "34-getModule-class-function"}, {"from": "25-Project-class", "to": "35-updateModule-class-function"}, {"from": "25-Project-class", "to": "36-deleteModule-class-function"}, {"from": "25-Project-class", "to": "37-getModuleObject-class-function"}, {"from": "25-Project-class", "to": "38-getName-class-function"}, {"from": "26-Edges-class", "to": "39-__init__-class-function"}, {"from": "26-Edges-class", "to": "40-getString-class-function"}, {"from": "4-objectDefinition-module", "to": "41-__init__-module-function"}, {"from": "4-objectDefinition-module", "to": "42-getName-module-function"}, {"from": "4-objectDefinition-module", "to": "43-__init__-module-function"}, {"from": "4-objectDefinition-module", "to": "44-__setClasses-module-function"}, {"from": "4-objectDefinition-module", "to": "45-__setFunctions-module-function"}, {"from": "4-objectDefinition-module", "to": "46-__setImportedObjects-module-function"}, {"from": "4-objectDefinition-module", "to": "47-getName-module-function"}, {"from": "4-objectDefinition-module", "to": "48-getFunctionsObject-module-function"}, {"from": "4-objectDefinition-module", "to": "49-getClassesObject-module-function"}, {"from": "4-objectDefinition-module", "to": "50-getImportedObjects-module-function"}, {"from": "4-objectDefinition-module", "to": "51-__init__-module-function"}, {"from": "4-objectDefinition-module", "to": "52-getString-module-function"}, {"from": "5-parseOperations-module", "to": "53-ParseModules-class"}, {"from": "53-ParseModules-class", "to": "54-__init__-class-function"}, {"from": "53-ParseModules-class", "to": "55-getClasses-class-function"}, {"from": "53-ParseModules-class", "to": "56-getImportedObjects-class-function"}, {"from": "53-ParseModules-class", "to": "57-getFunctions-class-function"}, {"from": "53-ParseModules-class", "to": "58-getModuleObject-class-function"}, {"from": "53-ParseModules-class", "to": "59-__isSpaceLine-class-function"}, {"from": "53-ParseModules-class", "to": "60-__removeLineSpacing-class-function"}, {"from": "53-ParseModules-class", "to": "61-__setImportedObjectName-class-function"}, {"from": "53-ParseModules-class", "to": "62-__getIndent-class-function"}, {"from": "53-ParseModules-class", "to": "63-__setClasses-class-function"}, {"from": "53-ParseModules-class", "to": "64-__getFunctions-class-function"}, {"from": "1-addModuleScreen-module", "to": "4-objectDefinition-module"}, {"from": "2-namingScreen-module", "to": "6-AddModuleScreen-class"}, {"from": "3-networkDefinition-module", "to": "22-getEdges-class-function"}, {"from": "5-parseOperations-module", "to": "4-objectDefinition-module"}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

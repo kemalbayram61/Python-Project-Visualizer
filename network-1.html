@@ -1,0 +1,105 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1600px;
+            height: 800px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": "#EA5900", "id": "0-proje-1-project", "image": "icons\\project.png", "label": "0-proje-1", "shape": "image", "size": 25}, {"color": "#79EA00", "id": "1-namingScreen-module", "image": "icons\\module.png", "label": "1-namingScreen", "shape": "image", "size": 20}, {"color": "#79EA00", "id": "2-addModuleScreen-module", "image": "icons\\module.png", "label": "2-addModuleScreen", "shape": "image", "size": 20}, {"color": "#00EACE", "id": "3-NamingScreen-class", "image": "icons\\class.png", "label": "3-NamingScreen", "shape": "image", "size": 15}, {"color": "#004AEA", "id": "4-__init__-class-function", "image": "icons\\function.png", "label": "4-__init__", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "5-__clickNextButton-class-function", "image": "icons\\function.png", "label": "5-__clickNextButton", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "6-__showWindow-class-function", "image": "icons\\function.png", "label": "6-__showWindow", "shape": "image", "size": 10}, {"color": "#00EACE", "id": "7-AddModuleScreen-class", "image": "icons\\class.png", "label": "7-AddModuleScreen", "shape": "image", "size": 15}, {"color": "#004AEA", "id": "8-__init__-class-function", "image": "icons\\function.png", "label": "8-__init__", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "9-__browserFiles-class-function", "image": "icons\\function.png", "label": "9-__browserFiles", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "10-__createNetwork-class-function", "image": "icons\\function.png", "label": "10-__createNetwork", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "11-__showWindow-class-function", "image": "icons\\function.png", "label": "11-__showWindow", "shape": "image", "size": 10}]);
+        edges = new vis.DataSet([{"from": "0-proje-1-project", "to": "1-namingScreen-module"}, {"from": "0-proje-1-project", "to": "2-addModuleScreen-module"}, {"from": "1-namingScreen-module", "to": "3-NamingScreen-class"}, {"from": "3-NamingScreen-class", "to": "4-__init__-class-function"}, {"from": "3-NamingScreen-class", "to": "5-__clickNextButton-class-function"}, {"from": "3-NamingScreen-class", "to": "6-__showWindow-class-function"}, {"from": "2-addModuleScreen-module", "to": "7-AddModuleScreen-class"}, {"from": "7-AddModuleScreen-class", "to": "8-__init__-class-function"}, {"from": "7-AddModuleScreen-class", "to": "9-__browserFiles-class-function"}, {"from": "7-AddModuleScreen-class", "to": "10-__createNetwork-class-function"}, {"from": "7-AddModuleScreen-class", "to": "11-__showWindow-class-function"}, {"from": "1-namingScreen-module", "to": "7-AddModuleScreen-class"}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

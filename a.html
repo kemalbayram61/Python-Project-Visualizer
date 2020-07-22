@@ -1,0 +1,105 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1600px;
+            height: 800px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": "#EA5900", "id": "0-a-project", "image": "icons\\project.png", "label": "0-a", "shape": "image", "size": 25}, {"color": "#79EA00", "id": "1-a-module", "image": "icons\\module.png", "label": "1-a", "shape": "image", "size": 20}, {"color": "#00EACE", "id": "2-fileOperation-class", "image": "icons\\class.png", "label": "2-fileOperation", "shape": "image", "size": 15}, {"color": "#00EACE", "id": "3-jsonOperation-class", "image": "icons\\class.png", "label": "3-jsonOperation", "shape": "image", "size": 15}, {"color": "#004AEA", "id": "4-__init__-class-function", "image": "icons\\function.png", "label": "4-__init__", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "5-readJson-class-function", "image": "icons\\function.png", "label": "5-readJson", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "6-writeJson-class-function", "image": "icons\\function.png", "label": "6-writeJson", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "7-deleteJson-class-function", "image": "icons\\function.png", "label": "7-deleteJson", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "8-updateJson-class-function", "image": "icons\\function.png", "label": "8-updateJson", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "9-convertToJson-class-function", "image": "icons\\function.png", "label": "9-convertToJson", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "10-convertToString-class-function", "image": "icons\\function.png", "label": "10-convertToString", "shape": "image", "size": 10}]);
+        edges = new vis.DataSet([{"from": "0-a-project", "to": "1-a-module"}, {"from": "1-a-module", "to": "2-fileOperation-class"}, {"from": "1-a-module", "to": "3-jsonOperation-class"}, {"from": "2-fileOperation-class", "to": "4-__init__-class-function"}, {"from": "2-fileOperation-class", "to": "5-readJson-class-function"}, {"from": "2-fileOperation-class", "to": "6-writeJson-class-function"}, {"from": "2-fileOperation-class", "to": "7-deleteJson-class-function"}, {"from": "2-fileOperation-class", "to": "8-updateJson-class-function"}, {"from": "3-jsonOperation-class", "to": "9-convertToJson-class-function"}, {"from": "3-jsonOperation-class", "to": "10-convertToString-class-function"}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

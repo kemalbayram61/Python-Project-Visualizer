@@ -13,6 +13,7 @@ class ProjectNetwork:
         self._name = name
         self._project =project
         self.__setNetwork()
+        self.__setModulesRelationship()
         self.__createNetwork()
 
     def __writeNodes(self):
@@ -24,13 +25,13 @@ class ProjectNetwork:
     def __setNetwork(self):
         node = Nodes(self._project.getName(),len(self._nodes),"project","#EA5900",25,"icons\\project.png")
         self._nodes.append(node)                            #self._nodes = ["project_name-0-project"]
-        self.__writeNodes()
+        #self.__writeNodes()
 
         modules = self._project.getModuleObject()
         for module in modules:
             node = Nodes(module.getName(),len(self._nodes),"module","#79EA00",20,"icons\\module.png")
             self._nodes.append(node)                        #self._nodes = ["project_name-0-project","module_name1-1-module","module_name2-2-module"...]
-            self.__writeNodes()
+            #self.__writeNodes()
             edge = Edges(self._nodes[0].getString(),self._nodes[len(self._nodes)-1].getString())
             self._edges.append(edge)
         
@@ -43,7 +44,7 @@ class ProjectNetwork:
             for clss in classes:
                 node = Nodes(clss.getName(),len(self._nodes),"class","#00EACE",15,"icons\\class.png") 
                 self._nodes.append(node)                    #self._nodes = ["project_name-0-project","module_name1-1-module","class_name1-2-class","class_name2-3-class",...]
-                self.__writeNodes()
+                #self.__writeNodes()
                 edge = Edges(self._nodes[i+1].getString(),self._nodes[len(self._nodes)-1].getString())
                 self._edges.append(edge)
 
@@ -53,7 +54,7 @@ class ProjectNetwork:
                 for func in functions:
                     node = Nodes(func.getName(),len(self._nodes),"class-function","#004AEA",10,"icons\\function.png")
                     self._nodes.append(node)                #self._nodes = ["project_name-0-project","module_name1-1-module","class_name1-2-class","func_name1-3-class-function","func_name2-4-class-function",...]
-                    self.__writeNodes()
+                    #self.__writeNodes()
                     edge = Edges(self._nodes[len(modules) + 1 + j + last_items_counter].getString(),self._nodes[len(self._nodes)-1].getString())
                     self._edges.append(edge)
                     items_counter = items_counter + 1
@@ -62,10 +63,30 @@ class ProjectNetwork:
             for func in module_functions:
                 node = Nodes(func.getName(),len(self._nodes),"module-function","#EA00DF",10,"icons\\module_function.png")
                 self._nodes.append(node)                    #self._nodes = ["project_name-0-project","module_name1-1-module","class_name1-2-class","func_name1-3-class-function","func_name1-4-module-function","func_name2-5-module-function",...]
-                self.__writeNodes()
+                #self.__writeNodes()
                 edge = Edges(self._nodes[i+1].getString(),self._nodes[len(self._nodes)-1].getString())
                 self._edges.append(edge)
                 items_counter = items_counter + 1
+
+    def __setModulesRelationship(self):
+        modules = self._project.getModuleObject()
+        module_index = 0
+        imodule_index = 0
+        for module in modules:
+            for i in range(len(self._nodes)):
+                if(module.getName() in self._nodes[i].getString()):
+                    module_index = i
+                    break
+            imported_modules = module.getImportedObjects()
+            for imodule in imported_modules:
+                for i in range(len(self._nodes)):
+                    if(imodule.name in self._nodes[i].getString()):
+                        imodule_index = i
+                        print(imodule_index)
+                        break
+
+                edge = Edges(self._nodes[module_index].getString(),self._nodes[imodule_index].getString())
+                self._edges.append(edge)
 
     def __createNetwork(self):
         for node in self._nodes:
@@ -73,7 +94,7 @@ class ProjectNetwork:
 
         for edge in self._edges:
             self._net.add_edge(edge.source_object,edge.definition_object)
-        self._net.show("nx.html")
+        self._net.show(self._name+".html")
         
 
     def getNodes(self):

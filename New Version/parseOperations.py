@@ -42,8 +42,12 @@ class ParseModules:
     def __removeLineSpacing(self):
         temp =[]
         for line in self._module_lines:
-            if(not(self.__isSpaceLine(line))):
+            if('#' in line):
+                if(not(self.__isSpaceLine(line.split('#')[0]))):
+                    temp.append(line.split('#')[0])
+            elif(not(self.__isSpaceLine(line))):
                 temp.append(line)
+
         self._module_lines = temp
 
     def __setImportedObjectName(self):

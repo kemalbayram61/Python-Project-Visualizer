@@ -1,0 +1,105 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1600px;
+            height: 800px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": "#EA5900", "id": "0-project-1-project", "image": "icons\\project.png", "label": "0-project-1", "shape": "image", "size": 25}, {"color": "#79EA00", "id": "1-m1-module", "image": "icons\\module.png", "label": "1-m1", "shape": "image", "size": 20}, {"color": "#79EA00", "id": "2-m2-module", "image": "icons\\module.png", "label": "2-m2", "shape": "image", "size": 20}, {"color": "#79EA00", "id": "3-m3-module", "image": "icons\\module.png", "label": "3-m3", "shape": "image", "size": 20}, {"color": "#00EACE", "id": "4-Attribute-class", "image": "icons\\class.png", "label": "4-Attribute", "shape": "image", "size": 15}, {"color": "#004AEA", "id": "5-__init__-class-function", "image": "icons\\function.png", "label": "5-__init__", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "6-getAttributeGraph-class-function", "image": "icons\\function.png", "label": "6-getAttributeGraph", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "7-clickOpenJson-module-function", "image": "icons\\module_function.png", "label": "7-clickOpenJson", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "8-writeAttributes-module-function", "image": "icons\\module_function.png", "label": "8-writeAttributes", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "9-clearAttributes-module-function", "image": "icons\\module_function.png", "label": "9-clearAttributes", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "10-drawAttributes-module-function", "image": "icons\\module_function.png", "label": "10-drawAttributes", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "11-clickMatplot-module-function", "image": "icons\\module_function.png", "label": "11-clickMatplot", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "12-clickPlotly-module-function", "image": "icons\\module_function.png", "label": "12-clickPlotly", "shape": "image", "size": 10}, {"color": "#EA00DF", "id": "13-clickPyvis-module-function", "image": "icons\\module_function.png", "label": "13-clickPyvis", "shape": "image", "size": 10}, {"color": "#00EACE", "id": "14-fileOperation-class", "image": "icons\\class.png", "label": "14-fileOperation", "shape": "image", "size": 15}, {"color": "#00EACE", "id": "15-jsonOperation-class", "image": "icons\\class.png", "label": "15-jsonOperation", "shape": "image", "size": 15}, {"color": "#004AEA", "id": "16-__init__-class-function", "image": "icons\\function.png", "label": "16-__init__", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "17-readJson-class-function", "image": "icons\\function.png", "label": "17-readJson", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "18-writeJson-class-function", "image": "icons\\function.png", "label": "18-writeJson", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "19-deleteJson-class-function", "image": "icons\\function.png", "label": "19-deleteJson", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "20-updateJson-class-function", "image": "icons\\function.png", "label": "20-updateJson", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "21-convertToJson-class-function", "image": "icons\\function.png", "label": "21-convertToJson", "shape": "image", "size": 10}, {"color": "#004AEA", "id": "22-convertToString-class-function", "image": "icons\\function.png", "label": "22-convertToString", "shape": "image", "size": 10}]);
+        edges = new vis.DataSet([{"from": "0-project-1-project", "to": "1-m1-module"}, {"from": "0-project-1-project", "to": "2-m2-module"}, {"from": "0-project-1-project", "to": "3-m3-module"}, {"from": "1-m1-module", "to": "4-Attribute-class"}, {"from": "4-Attribute-class", "to": "5-__init__-class-function"}, {"from": "4-Attribute-class", "to": "6-getAttributeGraph-class-function"}, {"from": "2-m2-module", "to": "7-clickOpenJson-module-function"}, {"from": "2-m2-module", "to": "8-writeAttributes-module-function"}, {"from": "2-m2-module", "to": "9-clearAttributes-module-function"}, {"from": "2-m2-module", "to": "10-drawAttributes-module-function"}, {"from": "2-m2-module", "to": "11-clickMatplot-module-function"}, {"from": "2-m2-module", "to": "12-clickPlotly-module-function"}, {"from": "2-m2-module", "to": "13-clickPyvis-module-function"}, {"from": "3-m3-module", "to": "14-fileOperation-class"}, {"from": "3-m3-module", "to": "15-jsonOperation-class"}, {"from": "14-fileOperation-class", "to": "16-__init__-class-function"}, {"from": "14-fileOperation-class", "to": "17-readJson-class-function"}, {"from": "14-fileOperation-class", "to": "18-writeJson-class-function"}, {"from": "14-fileOperation-class", "to": "19-deleteJson-class-function"}, {"from": "14-fileOperation-class", "to": "20-updateJson-class-function"}, {"from": "15-jsonOperation-class", "to": "21-convertToJson-class-function"}, {"from": "15-jsonOperation-class", "to": "22-convertToString-class-function"}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>
